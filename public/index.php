@@ -46,6 +46,10 @@ if (isset($_POST['subscribe_form'])) {
     try {
         $storage->persist($email);
         $storage->flush();
+
+        addSuccess('Email successfully subscribed!');
+        redirect('/');
+
     } catch (EmailAlreadyExistsException $exception) {
         addWarning($exception->getMessage());
     } catch (Exception $exception) {

@@ -47,7 +47,7 @@ class EmailStorage
      */
     public function flush()
     {
-        $result = file_put_contents($this->filePath, implode(PHP_EOL, $this->persistedEmails), FILE_APPEND);
+        $result = file_put_contents($this->filePath, implode(PHP_EOL, $this->persistedEmails) . PHP_EOL, FILE_APPEND);
 
         if ($result === false) {
             throw new EmailStorageException('An error occurred while saving email to subscription list!');
