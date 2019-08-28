@@ -63,5 +63,8 @@ class EmailStorage
         if ($result === false) {
             throw new EmailStorageException('An error occurred while saving email to subscription list!');
         }
+
+        $this->emails = array_merge($this->emails, $this->persistedEmails);
+        $this->persistedEmails = [];
     }
 }
