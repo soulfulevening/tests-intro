@@ -1,26 +1,42 @@
 <?php
 
+use Subscription\EmailStorage;
+use Subscription\Exceptions\EmailAlreadyExistsException;
 use Tokenly\TokenGenerator\TokenGenerator;
 
 class IntegrationalEmailStorageCest
 {
+    const TEST_FILE_PATH = __DIR__ . '/../_output/test_subscription_list.txt';
+
+    /**
+     * @var EmailStorage
+     */
+    private $storage;
+
     public function _before(UnitTester $I)
     {
-        require_once __DIR__ . '/../../public/_inc/_email_storage.php';
+        file_put_contents(self::TEST_FILE_PATH, '', FILE_TEXT);
+        $this->storage = new EmailStorage(self::TEST_FILE_PATH);
     }
 
     // tests
-    public function testIsExists(UnitTester $I)
+    public function testNotExists(UnitTester $I)
     {
-        $I->assertFalse(isExists('some@test.email'));
+        $I->assertFalse($this->storage->exists('some@test.email'));
     }
 
     public function testAdd(UnitTester $I)
     {
         $email = $this->genRandomEmail();
 
-        $I->assertEquals(add($email), strlen($email . PHP_EOL));
-        $I->assertTrue(isExists($email), 'email exists in list after insert');
+        $this->storage->persist($email);
+        $this->storage->flush();
+
+        $I->assertTrue($this->storage->exists($email));
+
+        $I->expectException(EmailAlreadyExistsException::class, function () use ($email) {
+            $this->storage->persist($email);
+        });
     }
 
     private function genRandomEmail()

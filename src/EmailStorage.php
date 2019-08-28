@@ -31,15 +31,26 @@ class EmailStorage
 
     /**
      * @param string $email
+     *
      * @throws EmailAlreadyExistsException
      */
     public function persist(string $email): void
     {
-        if (in_array($email, $this->emails)) {
+        if ($this->exists($email)) {
             throw new EmailAlreadyExistsException('This email is already subscribed!');
         }
 
         $this->persistedEmails[] = $email;
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return bool
+     */
+    public function exists(string $email): bool
+    {
+        return in_array($email, $this->emails);
     }
 
     /**
