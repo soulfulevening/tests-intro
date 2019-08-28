@@ -1,5 +1,10 @@
 <?php
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Subscription\EmailStorage;
+use Subscription\Exceptions\EmailAlreadyExistsException;
+
 echo <<<HTML
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +16,6 @@ echo <<<HTML
 HTML;
 
 require_once __DIR__ . '/_inc/_session.php';
-require_once __DIR__ . '/_inc/_email_storage.php';
 
 session_start();
 
@@ -37,20 +41,18 @@ if (isset($_POST['subscribe_form'])) {
         redirect('/');
     }
 
-    if (isExists($email)) {
-        addWarning('This email is already subscribed!');
+    $storage = new EmailStorage(__DIR__ . '/subscription.txt');
+
+    try {
+        $storage->persist($email);
+        $storage->flush();
+    } catch (EmailAlreadyExistsException $exception) {
+        addWarning($exception->getMessage());
+    } catch (Exception $exception) {
+        addError($exception->getMessage());
+    } finally {
         redirect('/');
     }
-
-    $result = add($email);
-
-    if ($result) {
-        addSuccess('Email successfully subscribed!');
-        redirect('/');
-    }
-
-    addError('An error occurred while saving email to subscription list!');
-    redirect('/');
 }
 
 
