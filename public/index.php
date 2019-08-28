@@ -78,7 +78,7 @@ if (!empty($_SESSION['flashBag'] ?? [])) {
 echo <<<HTML
 <div style="text-align: center">
 <h3>Subscribe! And at least someone will write to you ... </h3>
-<form action="/" method="POST">
+<form action="/" method="POST" onsubmit="submitHandler(this)">
 $alerts
 <p><input type="email" name="email" required></p>
 <p><input type="submit" name="subscribe_form" id=""></p>
@@ -88,7 +88,11 @@ HTML;
 
 echo <<<HTML
 <script>
-//alert("Stop!");
+function submitHandler(e) {
+  if (confirm('Are you really want to subscribe?')) {
+      e.submit;
+  }
+}
 </script>
 </body>
 </html>

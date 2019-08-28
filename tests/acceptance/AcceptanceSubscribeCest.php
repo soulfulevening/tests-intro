@@ -2,7 +2,7 @@
 
 use Tokenly\TokenGenerator\TokenGenerator;
 
-class SubscribeCest
+class AcceptanceSubscribeCest
 {
     public function _before(AcceptanceTester $I)
     {
@@ -14,17 +14,21 @@ class SubscribeCest
         $I->click('[name=\'subscribe_form\']');
 
         $I->seeInField('[name=\'email\']', '');
-        $I->see('Email must be specified!', '.warning');
+        $I->canSeeCurrentUrlEquals('/');
 
+        $I->dontSeeElement('.warning');
         $I->dontSeeElement('.error');
         $I->dontSeeElement('.success');
     }
 
     public function validEmail(AcceptanceTester $I)
     {
+
         $I->fillField('[name=\'email\']', $this->genRandomEmail());
 
         $I->click('[name=\'subscribe_form\']');
+
+        $I->acceptPopup();
 
         $I->seeInField('[name=\'email\']', '');
         $I->see('Email successfully subscribed!', '.success');
@@ -41,6 +45,8 @@ class SubscribeCest
 
         $I->click('[name=\'subscribe_form\']');
 
+        $I->acceptPopup();
+
         $I->seeInField('[name=\'email\']', '');
         $I->see('Email successfully subscribed!', '.success');
 
@@ -53,6 +59,8 @@ class SubscribeCest
 
         $I->click('[name=\'subscribe_form\']');
 
+        $I->acceptPopup();
+
         $I->seeInField('[name=\'email\']', '');
         $I->see('This email is already subscribed!', '.warning');
 
@@ -60,16 +68,16 @@ class SubscribeCest
         $I->dontSeeElement('.success');
     }
 
-    public function inValidEmail(AcceptanceTester $I)
+    public function invalidEmail(AcceptanceTester $I)
     {
         $I->fillField('[name=\'email\']', 'abc');
 
         $I->click('[name=\'subscribe_form\']');
 
-        $I->seeInField('[name=\'email\']', '');
+        $I->seeInField('[name=\'email\']', 'abc');
         $I->seeInCurrentUrl('/');
 
-        $I->see('Email is invalid', '.error');
+        $I->dontSeeElement('.error');
         $I->dontSeeElement('.success');
         $I->dontSeeElement('.warning');
     }
