@@ -6,7 +6,9 @@
             "email": "soulfulevening@syneforge.com"
         }
     ],
-    "require": {},
+    "require": {
+        "tokenly/token-generator": "^1.0"
+    },
     "require-dev": {
         "codeception/codeception": "^3.1"
     }

@@ -61,15 +61,15 @@ $alerts = '';
 
 if (!empty($_SESSION['flashBag'] ?? [])) {
     foreach ($_SESSION['flashBag']['errors'] ?? [] as $error) {
-        $alerts .= '<p style="background-color: red; color: white">' . $error . '</p>';
+        $alerts .= '<p style="background-color: red; color: white" class="error">' . $error . '</p>';
     }
 
     foreach ($_SESSION['flashBag']['success'] ?? [] as $success) {
-        $alerts .= '<p style="background-color: green; color: white">' . $success . '</p>';
+        $alerts .= '<p style="background-color: green; color: white" class="success">' . $success . '</p>';
     }
 
     foreach ($_SESSION['flashBag']['warnings'] ?? [] as $warning) {
-        $alerts .= '<p style="background-color: orange; color: white">' . $warning . '</p>';
+        $alerts .= '<p style="background-color: orange; color: white" class="warning">' . $warning . '</p>';
     }
 
     unset($_SESSION['flashBag']);
@@ -87,6 +87,9 @@ $alerts
 HTML;
 
 echo <<<HTML
+<script>
+//alert("Stop!");
+</script>
 </body>
 </html>
 HTML;

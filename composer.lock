@@ -4,8 +4,49 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba1d2f892342615ca20f2b016f7ffc49",
-    "packages": [],
+    "content-hash": "a526b3de637db6f8e82d592992c133c2",
+    "packages": [
+        {
+            "name": "tokenly/token-generator",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tokenly/token-generator.git",
+                "reference": "a0fff2db10325416ea2bbe1a11b729e97cc6f86c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tokenly/token-generator/zipball/a0fff2db10325416ea2bbe1a11b729e97cc6f86c",
+                "reference": "a0fff2db10325416ea2bbe1a11b729e97cc6f86c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tokenly\\TokenGenerator\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Devon Weller",
+                    "email": "devon@tokenly.com",
+                    "homepage": "http://tokenly.com"
+                }
+            ],
+            "description": "A library to generate secure random strings",
+            "time": "2017-11-01T12:59:07+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "behat/gherkin",
