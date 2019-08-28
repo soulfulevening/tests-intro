@@ -11,5 +11,10 @@
     },
     "require-dev": {
         "codeception/codeception": "^3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Subscription\\": "src/"
+        }
     }
 }
