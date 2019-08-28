@@ -1,0 +1,13 @@
+{
+    "name": "tenasterisks/tests-intro",
+    "authors": [
+        {
+            "name": "soulfulevening",
+            "email": "soulfulevening@syneforge.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "codeception/codeception": "^3.1"
+    }
+}
