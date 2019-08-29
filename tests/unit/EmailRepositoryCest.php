@@ -2,7 +2,6 @@
 
 
 use Subscription\Exceptions\EmailAlreadyExistsException;
-use Tokenly\TokenGenerator\TokenGenerator;
 
 class EmailRepositoryCest
 {
