@@ -1,5 +1,10 @@
 <?php
 
+use Subscription\EmailRepository;
+use Subscription\Exceptions\EmailAlreadyExistsException;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
 echo <<<HTML
 <!DOCTYPE html>
 <html lang="en">
@@ -36,22 +41,22 @@ if (isset($_POST['subscribe_form'])) {
         redirect('/');
     }
 
-    $emails = explode(PHP_EOL, file_get_contents(__DIR__ . '/subscription.txt'));
+    $emailRepository = new EmailRepository(__DIR__ . '/subscription.txt');
 
-    if (in_array($email, $emails)) {
-        addWarning('This email is already subscribed!');
-        redirect('/');
-    }
+    try {
+        $emailRepository->persist($email);
+        $emailRepository->flush();
 
-    $result = file_put_contents(__DIR__ . '/subscription.txt', $email . PHP_EOL, FILE_APPEND);
-
-    if ($result) {
         addSuccess('Email successfully subscribed!');
         redirect('/');
-    }
 
-    addError('An error occurred while saving email to subscription list!');
-    redirect('/');
+    } catch (EmailAlreadyExistsException $exception) {
+        addWarning($exception->getMessage());
+    } catch (Exception $exception) {
+        addError($exception->getMessage());
+    } finally {
+        redirect('/');
+    }
 }
 
 
