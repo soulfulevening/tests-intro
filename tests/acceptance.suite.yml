@@ -10,7 +10,5 @@ modules:
         - WebDriver:
             url: "%APP_TEST_URL%"
             browser: chrome
-#        - PhpBrowser:
-#            url: "%APP_TEST_URL%"
         - \Helper\Acceptance
     step_decorators: ~

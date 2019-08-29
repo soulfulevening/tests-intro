@@ -19,6 +19,7 @@
 class UnitTester extends \Codeception\Actor
 {
     use _generated\UnitTesterActions;
+    use RandomEmailTrait;
 
    /**
     * Define custom actions here

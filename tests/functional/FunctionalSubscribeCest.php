@@ -1,7 +1,5 @@
 <?php
 
-use Tokenly\TokenGenerator\TokenGenerator;
-
 class FunctionalSubscribeCest
 {
     public function _before(FunctionalTester $I)
@@ -16,13 +14,15 @@ class FunctionalSubscribeCest
         $I->seeInField('[name=\'email\']', '');
         $I->see('Email must be specified!', '.warning');
 
+        $I->seeResponseCodeIs(200);
+
         $I->dontSeeElement('.error');
         $I->dontSeeElement('.success');
     }
 
     public function validEmail(FunctionalTester $I)
     {
-        $I->fillField('[name=\'email\']', $this->genRandomEmail());
+        $I->fillField('[name=\'email\']', $I->generateRandomEmail());
 
         $I->click('[name=\'subscribe_form\']');
 
@@ -33,9 +33,9 @@ class FunctionalSubscribeCest
         $I->dontSeeElement('.warning');
     }
 
-    public function uniqueEmail(AcceptanceTester $I)
+    public function uniqueEmail(FunctionalTester $I)
     {
-        $email = $this->genRandomEmail();
+        $email = $I->generateRandomEmail();
 
         $I->fillField('[name=\'email\']', $email);
 
@@ -60,7 +60,7 @@ class FunctionalSubscribeCest
         $I->dontSeeElement('.success');
     }
 
-    public function invalidEmail(AcceptanceTester $I)
+    public function invalidEmail(FunctionalTester $I)
     {
         $I->fillField('[name=\'email\']', 'abc');
 
@@ -72,14 +72,5 @@ class FunctionalSubscribeCest
         $I->see('Email is invalid', '.error');
         $I->dontSeeElement('.success');
         $I->dontSeeElement('.warning');
-    }
-
-    private function genRandomEmail()
-    {
-        $generator = new TokenGenerator();
-
-        return $generator->generateToken(10, 'QA-TEST-')
-            . '@' . $generator->generateToken(5, 'Q')
-            . '.' . $generator->generateToken(5, 'A');
     }
 }

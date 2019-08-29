@@ -1,9 +1,10 @@
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-use Subscription\EmailStorage;
+use Subscription\EmailRepository;
 use Subscription\Exceptions\EmailAlreadyExistsException;
+use Subscription\FileEmailsProvider;
+
+require_once __DIR__ . '/../vendor/autoload.php';
 
 echo <<<HTML
 <!DOCTYPE html>
@@ -37,15 +38,17 @@ if (isset($_POST['subscribe_form'])) {
     $isValid = filter_var($email, FILTER_VALIDATE_EMAIL);
 
     if (!$isValid) {
-        addError('Email is invalid');
+        addError('Email is invalid!');
         redirect('/');
     }
 
-    $storage = new EmailStorage(__DIR__ . '/subscription.txt');
+    $emailRepository = new EmailRepository(new FileEmailsProvider(
+        __DIR__ . '/subscription.txt'
+    ));
 
     try {
-        $storage->persist($email);
-        $storage->flush();
+        $emailRepository->persist($email);
+        $emailRepository->flush();
 
         addSuccess('Email successfully subscribed!');
         redirect('/');
@@ -62,21 +65,19 @@ if (isset($_POST['subscribe_form'])) {
 
 $alerts = '';
 
-if (!empty($_SESSION['flashBag'] ?? [])) {
-    foreach ($_SESSION['flashBag']['errors'] ?? [] as $error) {
-        $alerts .= '<p style="background-color: red; color: white" class="error">' . $error . '</p>';
-    }
-
-    foreach ($_SESSION['flashBag']['success'] ?? [] as $success) {
-        $alerts .= '<p style="background-color: green; color: white" class="success">' . $success . '</p>';
-    }
-
-    foreach ($_SESSION['flashBag']['warnings'] ?? [] as $warning) {
-        $alerts .= '<p style="background-color: orange; color: white" class="warning">' . $warning . '</p>';
-    }
-
-    unset($_SESSION['flashBag']);
+foreach (getErrors() as $error) {
+    $alerts .= '<p style="background-color: red; color: white" class="error">' . $error . '</p>';
 }
+
+foreach (getSuccess() as $success) {
+    $alerts .= '<p style="background-color: green; color: white" class="success">' . $success . '</p>';
+}
+
+foreach (getWarnings() as $warning) {
+    $alerts .= '<p style="background-color: orange; color: white" class="warning">' . $warning . '</p>';
+}
+
+unset($_SESSION[FLASH_BAG_KEY]);
 
 echo <<<HTML
 <div style="text-align: center">

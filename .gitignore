@@ -1,4 +1,4 @@
 /.idea
 /public/subscription.txt
-/vendor/
+/vendor
 /.env
