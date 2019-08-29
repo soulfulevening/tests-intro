@@ -19,7 +19,7 @@ class FileEmailsProvider implements EmailsProviderInterface
      */
     public function fetchAll(): array
     {
-        return explode(PHP_EOL, file_get_contents($this->filePath));
+        return array_filter(explode(PHP_EOL, file_get_contents($this->filePath)));
     }
 
     /**
