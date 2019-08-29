@@ -19,6 +19,7 @@
 class FunctionalTester extends \Codeception\Actor
 {
     use _generated\FunctionalTesterActions;
+    use RandomEmailTrait;
 
    /**
     * Define custom actions here
