@@ -6,45 +6,103 @@ class EmailRepositoryTest extends \PHPUnit\Framework\TestCase
 
     use RandomEmailTrait;
 
-    public function testNotExists()
+    public function testEmailsRenewOnConstruct()
     {
+        $providerMock = $this->getEmailProviderStub();
+        $providerMock
+            ->expects($this->once())
+            ->method('fetchAll')
+            ->willReturn([
+                'a@a.a',
+                'b@b.b'
+            ]);
+
         $repository = new \Subscription\EmailRepository(
-            $this->getEmailProviderStub()
+            $providerMock
         );
 
-        $this->assertFalse($repository->exists('some@test.email'));
+        $this->assertTrue($repository->exists('a@a.a'));
+        $this->assertTrue($repository->exists('b@b.b'));
+        $this->assertFalse($repository->exists('c@c.c'));
     }
 
-    public function testAdd()
+    public function testPersistExisted()
     {
-        $email = $this->generateRandomEmail();
-
-        $emailProviderMock = $this->getEmailProviderStub();
-        $emailProviderMock
+        $providerMock = $this->getEmailProviderStub();
+        $providerMock
             ->expects($this->once())
-            ->method('appendMany')
-            ->with([$email]);
-
-        $emailProviderMock
-            ->expects($this->at(1))
             ->method('fetchAll')
-            ->willReturn([]);
+            ->willReturn([
+                'a@a.a'
+            ]);
 
-        $emailProviderMock
-            ->expects($this->at(2))
-            ->method('fetchAll')
-            ->willReturn([$email]);
-
-        $repository = new \Subscription\EmailRepository($emailProviderMock);
-
-        $repository->persist($email);
-        $repository->flush();
-
-        $this->assertTrue($repository->exists($email));
+        $repository = new \Subscription\EmailRepository(
+            $providerMock
+        );
 
         $this->expectException(\Subscription\Exceptions\EmailAlreadyExistsException::class);
-        $repository->persist($email);
+        $repository->persist('a@a.a');
     }
+
+    public function testPersistNotExisted()
+    {
+        $providerMock = $this->getEmailProviderStub();
+        $providerMock
+            ->expects($this->once())
+            ->method('appendMany')
+            ->with(['a@a.a']);
+
+        $repository = new \Subscription\EmailRepository(
+            $providerMock
+        );
+
+        $repository->persist('a@a.a');
+        $repository->flush();
+    }
+
+    public function testFlushWithError()
+    {
+        $providerMock = $this->getEmailProviderStub();
+        $providerMock
+            ->expects($this->once())
+            ->method('appendMany')
+            ->willThrowException(new Exception());
+
+        $repository = new \Subscription\EmailRepository(
+            $providerMock
+        );
+
+        $this->expectException(\Subscription\Exceptions\EmailStorageException::class);
+        $repository->flush();
+    }
+
+    public function testFlush()
+    {
+        $providerMock = $this->getEmailProviderStub();
+
+        $providerMock
+            ->expects($this->exactly(2))
+            ->method('appendMany');
+
+        $providerMock
+            ->expects($this->at(1))
+            ->method('appendMany')
+            ->with(['a@a.a']);
+
+        $providerMock
+            ->expects($this->at(3))
+            ->method('appendMany')
+            ->with([]);
+
+        $repository = new \Subscription\EmailRepository(
+            $providerMock
+        );
+
+        $repository->persist('a@a.a');
+        $repository->flush();
+        $repository->flush();
+    }
+
 
     private function getEmailProviderStub()
     {
