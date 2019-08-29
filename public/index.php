@@ -2,6 +2,7 @@
 
 use Subscription\EmailRepository;
 use Subscription\Exceptions\EmailAlreadyExistsException;
+use Subscription\FileEmailsProvider;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -41,7 +42,9 @@ if (isset($_POST['subscribe_form'])) {
         redirect('/');
     }
 
-    $emailRepository = new EmailRepository(__DIR__ . '/subscription.txt');
+    $emailRepository = new EmailRepository(new FileEmailsProvider(
+        __DIR__ . '/subscription.txt'
+    ));
 
     try {
         $emailRepository->persist($email);

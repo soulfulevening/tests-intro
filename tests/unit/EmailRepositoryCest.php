@@ -16,7 +16,7 @@ class EmailRepositoryCest
     public function _before(UnitTester $I)
     {
         file_put_contents(self::TEST_FILE_PATH, '', FILE_TEXT);
-        $this->storage = new \Subscription\EmailRepository(self::TEST_FILE_PATH);
+        $this->storage = new \Subscription\EmailRepository();
     }
 
     // tests
