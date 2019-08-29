@@ -25,8 +25,13 @@ class EmailRepository
 
     public function __construct(string $filePath)
     {
-        $this->emails = explode(PHP_EOL, file_get_contents($filePath));
         $this->filePath = $filePath;
+        $this->renewEmailList();
+    }
+
+    private function renewEmailList()
+    {
+        $this->emails = explode(PHP_EOL, file_get_contents($this->filePath));
     }
 
     /**
@@ -63,5 +68,8 @@ class EmailRepository
         if ($result === false) {
             throw new EmailStorageException('An error occurred while saving email to subscription list!');
         }
+
+        $this->persistedEmails = [];
+        $this->renewEmailList();
     }
 }

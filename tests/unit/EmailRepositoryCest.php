@@ -26,12 +26,7 @@ class EmailRepositoryCest
         $I->assertFalse($this->storage->exists('some@test.email'));
     }
 
-    public function testExists(UnitTester $I)
-    {
-        file_put_contents(self::TEST_FILE_PATH, 'some@test.email' . PHP_EOL, FILE_TEXT);
-        $I->assertTrue($this->storage->exists('some@test.email'));
-    }
-
+    // run unit \EmailRepositoryCest::testAdd --debug
     public function testAdd(UnitTester $I)
     {
         $email = $I->generateRandomEmail();
