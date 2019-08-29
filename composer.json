@@ -1,0 +1,21 @@
+{
+    "name": "tenasterisks/tests-intro",
+    "authors": [
+        {
+            "name": "soulfulevening",
+            "email": "soulfulevening@syneforge.com"
+        }
+    ],
+    "require": {
+        "tokenly/token-generator": "^1.0",
+        "vlucas/phpdotenv": "^3.5"
+    },
+    "require-dev": {
+        "codeception/codeception": "^3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Subscription\\": "src/"
+        }
+    }
+}
