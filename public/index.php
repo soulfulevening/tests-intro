@@ -57,21 +57,19 @@ if (isset($_POST['subscribe_form'])) {
 
 $alerts = '';
 
-if (!empty($_SESSION['flashBag'] ?? [])) {
-    foreach ($_SESSION['flashBag']['errors'] ?? [] as $error) {
-        $alerts .= '<p style="background-color: red; color: white" class="error">' . $error . '</p>';
-    }
-
-    foreach ($_SESSION['flashBag']['success'] ?? [] as $success) {
-        $alerts .= '<p style="background-color: green; color: white" class="success">' . $success . '</p>';
-    }
-
-    foreach ($_SESSION['flashBag']['warnings'] ?? [] as $warning) {
-        $alerts .= '<p style="background-color: orange; color: white" class="warning">' . $warning . '</p>';
-    }
-
-    unset($_SESSION['flashBag']);
+foreach (getErrors() as $error) {
+    $alerts .= '<p style="background-color: red; color: white" class="error">' . $error . '</p>';
 }
+
+foreach (getSuccess() as $success) {
+    $alerts .= '<p style="background-color: green; color: white" class="success">' . $success . '</p>';
+}
+
+foreach (getWarnings() as $warning) {
+    $alerts .= '<p style="background-color: orange; color: white" class="warning">' . $warning . '</p>';
+}
+
+unset($_SESSION[FLASH_BAG_KEY]);
 
 echo <<<HTML
 <div style="text-align: center">
