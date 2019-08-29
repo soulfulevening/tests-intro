@@ -19,19 +19,19 @@ class EmailRepository
     private $persistedEmails = [];
 
     /**
-     * @var string
+     * @var EmailsProviderInterface
      */
-    private $filePath;
+    private $emailsProvider;
 
-    public function __construct(string $filePath)
+    public function __construct(EmailsProviderInterface $emailsProvider)
     {
-        $this->filePath = $filePath;
+        $this->emailsProvider = $emailsProvider;
         $this->renewEmailList();
     }
 
     private function renewEmailList()
     {
-        $this->emails = explode(PHP_EOL, file_get_contents($this->filePath));
+        $this->emails = $this->emailsProvider->fetchAll();
     }
 
     /**
@@ -63,9 +63,10 @@ class EmailRepository
      */
     public function flush()
     {
-        $result = file_put_contents($this->filePath, implode(PHP_EOL, $this->persistedEmails) . PHP_EOL, FILE_APPEND);
+        try {
+            $this->emailsProvider->appendMany($this->persistedEmails);
 
-        if ($result === false) {
+        } catch (\Exception $exception) {
             throw new EmailStorageException('An error occurred while saving email to subscription list!');
         }
 
