@@ -10,50 +10,48 @@ echo <<<HTML
 <body>
 HTML;
 
+require_once __DIR__ . '/_inc/_session.php';
+
 session_start();
+
+function redirect(string $location) {
+    session_commit();
+    header("Location: " . $location);
+    exit();
+}
 
 if (isset($_POST['subscribe_form'])) {
 
     $email = $_POST['email'] ?? null;
 
     if (strlen($email) <= 0) {
-        $_SESSION['flashBag']['warnings'][] = 'Email must be specified!';
-        session_commit();
-        header("Location: /");
-        exit();
+        addWarning('Email must be specified!');
+        redirect('/');
     }
 
     $isValid = filter_var($email, FILTER_VALIDATE_EMAIL);
 
     if (!$isValid) {
-        $_SESSION['flashBag']['errors'][] = 'Email is invalid';
-        session_commit();
-        header("Location: /");
-        exit();
+        addError('Email is invalid!');
+        redirect('/');
     }
 
     $emails = explode(PHP_EOL, file_get_contents(__DIR__ . '/subscription.txt'));
 
     if (in_array($email, $emails)) {
-        $_SESSION['flashBag']['warnings'][] = 'This email is already subscribed!';
-        session_commit();
-        header("Location: /");
-        exit();
+        addWarning('This email is already subscribed!');
+        redirect('/');
     }
 
     $result = file_put_contents(__DIR__ . '/subscription.txt', $email . PHP_EOL, FILE_APPEND);
 
     if ($result) {
-        $_SESSION['flashBag']['success'][] = 'Email successfully subscribed!';
-        session_commit();
-        header("Location: /");
-        exit();
+        addSuccess('Email successfully subscribed!');
+        redirect('/');
     }
 
-    $_SESSION['flashBag']['errors'][] = 'An error occurred while saving email to subscription list!';
-    session_commit();
-    header("Location: /");
-    exit();
+    addError('An error occurred while saving email to subscription list!');
+    redirect('/');
 }
 
 
