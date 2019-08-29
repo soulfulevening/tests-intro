@@ -25,7 +25,7 @@ if (isset($_POST['subscribe_form'])) {
     $email = $_POST['email'] ?? null;
 
     if (strlen($email) <= 0) {
-        addWarning('Email must be specified!');
+        addWarning('Email must be specified');
         redirect('/');
     }
 
