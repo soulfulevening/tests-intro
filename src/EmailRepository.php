@@ -65,7 +65,6 @@ class EmailRepository
     {
         try {
             $this->emailsProvider->appendMany($this->persistedEmails);
-
         } catch (\Exception $exception) {
             throw new EmailStorageException('An error occurred while saving email to subscription list!');
         }
