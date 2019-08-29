@@ -7,7 +7,8 @@
         }
     ],
     "require": {
-        "tokenly/token-generator": "^1.0"
+        "tokenly/token-generator": "^1.0",
+        "vlucas/phpdotenv": "^3.5"
     },
     "require-dev": {
         "codeception/codeception": "^3.1"

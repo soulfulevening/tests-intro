@@ -9,6 +9,6 @@ actor: FunctionalTester
 modules:
     enabled:
         - PhpBrowser:
-            url: http://10.24.7.108:8000
+            url: "%APP_TEST_URL%"
         - \Helper\Functional
-    step_decorators: ~        
+    step_decorators: ~

@@ -8,9 +8,9 @@ actor: AcceptanceTester
 modules:
     enabled:
         - WebDriver:
-            url: http://10.24.7.108:8000
+            url: "%APP_TEST_URL%"
             browser: chrome
 #        - PhpBrowser:
-#            url: http://10.24.7.108:8000
+#            url: "%APP_TEST_URL%"
         - \Helper\Acceptance
-    step_decorators: ~        
+    step_decorators: ~
